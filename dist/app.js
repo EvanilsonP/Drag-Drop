@@ -5,26 +5,31 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-function validate(validableInput) {
+function validate(validatableInput) {
     let isValid = true;
-    if (validableInput.required) {
-        isValid = isValid && validableInput.value.toString().trim().length !== 0;
+    if (validatableInput.required) {
+        isValid = isValid && validatableInput.value.toString().trim().length !== 0;
     }
-    if (validableInput.minLength != null && typeof validableInput.value === 'string') {
-        isValid = isValid && validableInput.value.length > validableInput.minLength;
+    if (validatableInput.minLength != null &&
+        typeof validatableInput.value === 'string') {
+        isValid =
+            isValid && validatableInput.value.length >= validatableInput.minLength;
     }
-    if (validableInput.maxLength != null && typeof validableInput.value === 'string') {
-        isValid = isValid && validableInput.value.length < validableInput.maxLength;
+    if (validatableInput.maxLength != null &&
+        typeof validatableInput.value === 'string') {
+        isValid =
+            isValid && validatableInput.value.length <= validatableInput.maxLength;
     }
-    if (validableInput.min != null && typeof validableInput.value === 'number') {
-        isValid = isValid && validableInput.value > validableInput.min;
+    if (validatableInput.min != null &&
+        typeof validatableInput.value === 'number') {
+        isValid = isValid && validatableInput.value >= validatableInput.min;
     }
-    if (validableInput.max != null && typeof validableInput.value === 'number') {
-        isValid = isValid && validableInput.value < validableInput.max;
+    if (validatableInput.max != null &&
+        typeof validatableInput.value === 'number') {
+        isValid = isValid && validatableInput.value <= validatableInput.max;
     }
     return isValid;
 }
-;
 // autobind decorator
 function autobind(_, _2, descriptor) {
     const originalMethod = descriptor.value;
@@ -36,6 +41,28 @@ function autobind(_, _2, descriptor) {
         }
     };
     return adjDescriptor;
+}
+// ProjectList Class
+class ProjectList {
+    constructor(type) {
+        this.type = type;
+        this.templateElement = document.getElementById('project-list');
+        this.hostElement = document.getElementById('app');
+        const importedNode = document.importNode(this.templateElement.content, true);
+        this.element = importedNode.firstElementChild;
+        this.element.id = `${this.type}-projects`;
+        this.attach();
+        this.renderContent();
+    }
+    renderContent() {
+        const listId = `${this.type}-projects-list`;
+        this.element.querySelector('ul').id = listId;
+        this.element.querySelector('h2').textContent =
+            this.type.toUpperCase() + ' PROJECTS';
+    }
+    attach() {
+        this.hostElement.insertAdjacentElement('beforeend', this.element);
+    }
 }
 // ProjectInput Class
 class ProjectInput {
@@ -67,8 +94,8 @@ class ProjectInput {
         const peopleValidatable = {
             value: +enteredPeople,
             required: true,
-            minLength: 1,
-            maxLength: 5
+            min: 1,
+            max: 5
         };
         if (!validate(titleValidatable) ||
             !validate(descriptionValidatable) ||
@@ -105,4 +132,6 @@ __decorate([
     autobind
 ], ProjectInput.prototype, "submitHandler", null);
 const prjInput = new ProjectInput();
+const activePrjList = new ProjectList('active');
+const finishedPrjList = new ProjectList('finished');
 //# sourceMappingURL=app.js.map
