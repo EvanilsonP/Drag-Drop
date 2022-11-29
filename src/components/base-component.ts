@@ -1,10 +1,10 @@
-namespace App {
 // Component Base Class
-export abstract class Component<T extends HTMLElement, U extends HTMLElement> {
+namespace App {
+  export abstract class Component<T extends HTMLElement, U extends HTMLElement> {
     templateElement: HTMLTemplateElement;
     hostElement: T;
     element: U;
-  
+
     constructor(
       templateId: string,
       hostElementId: string,
@@ -15,7 +15,7 @@ export abstract class Component<T extends HTMLElement, U extends HTMLElement> {
         templateId
       )! as HTMLTemplateElement;
       this.hostElement = document.getElementById(hostElementId)! as T;
-  
+
       const importedNode = document.importNode(
         this.templateElement.content,
         true
@@ -24,17 +24,17 @@ export abstract class Component<T extends HTMLElement, U extends HTMLElement> {
       if (newElementId) {
         this.element.id = newElementId;
       }
-  
+
       this.attach(insertAtStart);
     }
-  
+
     private attach(insertAtBeginning: boolean) {
       this.hostElement.insertAdjacentElement(
         insertAtBeginning ? 'afterbegin' : 'beforeend',
         this.element
       );
     }
-  
+
     abstract configure(): void;
     abstract renderContent(): void;
   }
